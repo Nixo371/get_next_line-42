@@ -6,26 +6,21 @@
 /*   By: nucieda- <nucieda-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 18:20:45 by nucieda-          #+#    #+#             */
-/*   Updated: 2022/03/03 21:49:11 by nucieda-         ###   ########.fr       */
+/*   Updated: 2022/03/04 20:30:49 by nucieda-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_memset(void *str, int c, size_t n)
+void	*ft_memset(char *str, int c, size_t n)
 {
-	char	*strr;
-	
-	strr = str;
-	while (*strr)
-		strr++;
-	while (n > 0)
+	while (n)
 	{
-		*strr = c;
-		strr++;
+		*str = c;
+		str++;
 		n--;
 	}
-	return (str);
+	return (NULL);
 }
 
 
@@ -51,36 +46,55 @@ void	ft_strlcpy(char *dest, char *src, int len)
 		dest[i] = src[i];
 		i++;
 	}
-	while (len-- > 0)
-		dest[i] = '\0';
+	dest[i] = '\0';
 }
 
-int	ft_strchr(const char *str, int c)
+int	ft_strchr(char *str, int c)
 {
-	const char	*s;
-	int			nl_overflow;
+	int	chr_count;
+	int	nl_count;
 
-	nl_overflow = 0;
-	s = str;
-	if (c == 1)
+	chr_count = 0;
+	nl_count = 0;
+	if (c == 3)
 	{
-		while(*str == '\n')
+		while(*str)
 		{
 			str++;
-			nl_overflow++;
+			chr_count++;
 		}
-		return (nl_overflow);
+		return (chr_count);
 	}
 	while (*str)
 	{
 		if (*str == '\n')
-			break;
+		{
+			nl_count++;
+			break ;
+		}
+		chr_count++;
 		str++;
 	}
-	while(*str == '\n')
+	if (nl_count == 0)
+	{
+		return (-1);
+	}
+	str++;
+	while (*str == '\n')
 	{
 		str++;
-		nl_overflow++;
+		nl_count++;
 	}
-	return ((str - s + 1) - nl_overflow);
+	if (c == 0)
+	{
+		return (chr_count);
+	}
+	else if (c == 1)
+	{
+		return (nl_count);
+	}
+	else
+	{
+		return (chr_count + nl_count);
+	}
 }
