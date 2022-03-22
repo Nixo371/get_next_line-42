@@ -6,7 +6,7 @@
 /*   By: nucieda- <nucieda-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 18:02:49 by nucieda-          #+#    #+#             */
-/*   Updated: 2022/03/22 18:02:22 by nucieda-         ###   ########.fr       */
+/*   Updated: 2022/03/22 18:16:50 by nucieda-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
 	buffer = ft_read(fd, buffer);
-	if (buffer  == NULL)
+	if (buffer == NULL)
 		return (NULL);
 	next_line = ft_line(buffer);
 	buffer = ft_overflow(buffer);
