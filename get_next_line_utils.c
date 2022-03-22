@@ -6,24 +6,36 @@
 /*   By: nucieda- <nucieda-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 18:20:45 by nucieda-          #+#    #+#             */
-/*   Updated: 2022/03/04 20:30:49 by nucieda-         ###   ########.fr       */
+/*   Updated: 2022/03/22 17:44:57 by nucieda-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_memset(char *str, int c, size_t n)
+/*
+Returns first position of char c if found within char pointer
+*/
+char	*ft_strchr(char *str, int c)
 {
-	while (n)
+	int	i;
+
+	i = 0;
+	if (str == NULL)
+		return (NULL);
+	if (c == '\0')
+		return (&str[ft_strlen(str)]);
+	while (str[i])
 	{
-		*str = c;
-		str++;
-		n--;
+		if (str[i] == c)
+			return (&str[i]);
+		i++;
 	}
 	return (NULL);
 }
 
-
+/*
+Returns length of char pointer str
+*/
 size_t	ft_strlen(const char *str)
 {
 	const char	*s;
@@ -34,67 +46,34 @@ size_t	ft_strlen(const char *str)
 	return (s - str);
 }
 
-void	ft_strlcpy(char *dest, char *src, int len)
+/*
+Returns a new char pointer combining s1 and s2, initializing
+s1 with null (\0) if it is not already initialized
+*/
+char	*ft_strjoin(char *s1, char *s2)
 {
-	int	i;
+	char	*str;
+	int		i;
+	int		j;
 
+	i = -1;
+	if (!s1)
+	{
+		s1 = malloc(1 * sizeof(char));
+		s1[0] = '\0';
+	}
+	if (s1 == NULL || s2 == NULL)
+		return (NULL);
+	str = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	if (str == NULL)
+		return (NULL);
+	while (s1[++i])
+		str[i] = s1[i];
+	j = i;
 	i = 0;
-	if (len == 0)
-		return ;
-	while (len-- && src[i])
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-}
-
-int	ft_strchr(char *str, int c)
-{
-	int	chr_count;
-	int	nl_count;
-
-	chr_count = 0;
-	nl_count = 0;
-	if (c == 3)
-	{
-		while(*str)
-		{
-			str++;
-			chr_count++;
-		}
-		return (chr_count);
-	}
-	while (*str)
-	{
-		if (*str == '\n')
-		{
-			nl_count++;
-			break ;
-		}
-		chr_count++;
-		str++;
-	}
-	if (nl_count == 0)
-	{
-		return (-1);
-	}
-	str++;
-	while (*str == '\n')
-	{
-		str++;
-		nl_count++;
-	}
-	if (c == 0)
-	{
-		return (chr_count);
-	}
-	else if (c == 1)
-	{
-		return (nl_count);
-	}
-	else
-	{
-		return (chr_count + nl_count);
-	}
+	while (s2[i])
+		str[j++] = s2[i++];
+	str[j] = '\0';
+	free(s1);
+	return (str);
 }

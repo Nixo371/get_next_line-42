@@ -6,91 +6,115 @@
 /*   By: nucieda- <nucieda-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 18:02:49 by nucieda-          #+#    #+#             */
-/*   Updated: 2022/03/04 20:29:51 by nucieda-         ###   ########.fr       */
+/*   Updated: 2022/03/22 17:53:14 by nucieda-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_next_line(int fd)
+/*
+Returns char pointer passed to it after appending what is read up until
+the next line skip (\n), freeing the auxiliary char pointer used
+*/
+char	*ft_read(int fd, char *buffer)
 {
-	static char	*overflow = NULL;
-	char		*buffer;
-	char		*nl;
-	char		*next_line;
-	int			read_amount;
+	char	*aux;
+	int		read_return;
 
-	buffer = malloc(BUFFER_SIZE + 1 * sizeof(char));
-	if (buffer == NULL)
-		return (NULL);
-	if (overflow == NULL)
+	aux = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (aux == NULL)
+		return (0);
+	read_return = -1;
+	while (!ft_strchr(buffer, '\n') && read_return != 0)
 	{
-		overflow = malloc(BUFFER_SIZE * sizeof(char));
-		*overflow = '\0';
-	}
-	if (overflow && *overflow)
-	{
-		if(ft_strchr(overflow, 0) == -1 && ft_strlen(overflow) < BUFFER_SIZE)
+		read_return = read(fd, aux, BUFFER_SIZE);
+		if (read_return == -1)
 		{
-			read(fd, overflow + ft_strchr(overflow, 1), BUFFER_SIZE - ft_strchr(overflow, 1));
+			free(aux);
+			return (NULL);
 		}
-		ft_strlcpy(buffer, overflow, ft_strlen(overflow));
+		aux[read_return] = '\0';
+		buffer = ft_strjoin(buffer, aux);
 	}
-	else
-	{
-		read_amount = read(fd, buffer, BUFFER_SIZE);
-		ft_memset(buffer + read_amount, '\0', BUFFER_SIZE - read_amount);
-	}
-	if (ft_strchr(buffer, 0) == -1)
-	{
-		nl = malloc(BUFFER_SIZE + 1 * sizeof(char));
-		ft_strlcpy(nl, buffer, BUFFER_SIZE);
-	}
-	else
-	{
-		nl = malloc(ft_strchr(buffer, 0) + 1 * sizeof(char));
-		ft_strlcpy(nl, buffer, ft_strchr(buffer, 0) + 1);
-	}
-	if (*overflow && ft_strchr(buffer, 2) != -1)
-	{
-		ft_strlcpy(overflow, overflow + ft_strchr(buffer, 2), BUFFER_SIZE - ft_strchr(buffer, 2));
-		ft_memset(overflow + ft_strchr(buffer, 3), '\0', BUFFER_SIZE - ft_strchr(buffer, 3));
-	}
-	else if (*overflow && ft_strchr(buffer, 2) == -1)
-	{
-		*overflow = '\0';
-	}
-	else
-	{
-		ft_strlcpy(overflow, buffer + ft_strchr(buffer, 2), BUFFER_SIZE);
-	}
-	next_line = "";
-	ft_strlcpy(next_line, nl, ft_strlen(nl));
-	free(nl);
-	free(buffer);
-	return (next_line);
+	free(aux);
+	return (buffer);
 }
 
-/*int main(int argc, char **argv)
+/*
+Returns char pointer corresponding to the next line in the file. Copies
+from the buffer to an auxiliary pointer up to a line skip, which is returned.
+*/
+char	*ft_line(char *buffer)
 {
-	int		fd;
-	char 	*oop = "------------------------------------------------------------------------";
+	char	*aux;
+	int		i;
 
-	fd = open("test.txt", O_RDONLY);
-	printf("%s\n", oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-	printf("%s%s\n", get_next_line(fd), oop);
-}*/
+	i = 0;
+	if (!buffer[i])
+		return (NULL);
+	while (buffer[i] && buffer[i] != '\n')
+		i++;
+	aux = malloc((i + 2) * sizeof(char));
+	if (aux == NULL)
+		return (0);
+	i = 0;
+	while (buffer[i] && buffer[i] != '\n')
+	{
+		aux[i] = buffer[i];
+		i++;
+	}
+	if (buffer[i] == '\n')
+	{
+		aux[i] = buffer[i];
+		i++;
+	}
+	aux[i] = '\0';
+	return (aux);
+}
+
+/*
+Returns an auxiliary char pointer which stores everything after the
+line skip (\n), serving as an overflow management.
+*/
+char	*ft_overflow(char *buffer)
+{
+	char	*aux;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (buffer[i] && buffer[i] != '\n')
+		i++;
+	if (!buffer[i])
+	{
+		free(buffer);
+		return (NULL);
+	}
+	aux = malloc((ft_strlen(buffer) - i + 1) * sizeof(char));
+	if (aux == NULL)
+		return (NULL);
+	i++;
+	while (buffer[i])
+	{
+		aux[j++] = buffer[i++];
+	}
+	aux[j] = '\0';
+	free(buffer);
+	return (aux);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*buffer;
+	char		*next_line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (0);
+	buffer = ft_read(fd, buffer);
+	if (buffer == NULL)
+		return (NULL);
+	next_line = ft_line(buffer);
+	buffer = ft_overflow(buffer);
+	return (next_line);
+}

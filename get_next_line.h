@@ -6,7 +6,7 @@
 /*   By: nucieda- <nucieda-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 18:04:01 by nucieda-          #+#    #+#             */
-/*   Updated: 2022/03/04 19:42:35 by nucieda-         ###   ########.fr       */
+/*   Updated: 2022/03/22 17:24:16 by nucieda-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,12 @@
 # include <fcntl.h>
 
 char	*get_next_line(int fd);
-int		ft_strchr(char *str, int c);
-void	ft_strlcpy(char *dest, char *src, int len);
+char	*ft_read(int fd, char *buffer);
+char	*ft_line(char *buffer);
+char	*ft_overflow(char *buffer);
+
+char	*ft_strchr(char *s, int c);
 size_t	ft_strlen(const char *str);
-void	*ft_memset(char *str, int c, size_t n);
+char	*ft_strjoin(char *s1, char *s2);
 
 #endif
