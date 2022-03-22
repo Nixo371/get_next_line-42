@@ -6,12 +6,12 @@
 /*   By: nucieda- <nucieda-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 18:04:01 by nucieda-          #+#    #+#             */
-/*   Updated: 2022/03/22 18:03:29 by nucieda-         ###   ########.fr       */
+/*   Updated: 2022/03/22 18:12:27 by nucieda-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <stdarg.h>
 # include <unistd.h>
