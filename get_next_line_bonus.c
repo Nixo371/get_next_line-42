@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nucieda- <nucieda-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 18:02:49 by nucieda-          #+#    #+#             */
-/*   Updated: 2022/03/22 18:02:22 by nucieda-         ###   ########.fr       */
+/*   Updated: 2022/03/22 18:05:52 by nucieda-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /*
 Returns char pointer passed to it after appending what is read up until
@@ -106,15 +106,15 @@ char	*ft_overflow(char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer[6969];
 	char		*next_line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	buffer = ft_read(fd, buffer);
-	if (buffer  == NULL)
+	buffer[fd] = ft_read(fd, buffer[fd]);
+	if (buffer[fd] == NULL)
 		return (NULL);
-	next_line = ft_line(buffer);
-	buffer = ft_overflow(buffer);
+	next_line = ft_line(buffer[fd]);
+	buffer[fd] = ft_overflow(buffer[fd]);
 	return (next_line);
 }
